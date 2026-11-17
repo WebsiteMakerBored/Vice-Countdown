@@ -2,24 +2,18 @@
 
 **Every Second Closer to Vice City.**
 
-Vice Countdown is a GTA VI countdown website featuring a live release timer, worldwide release times, and platform-specific information.
+Vice Countdown is a fan-made GTA VI countdown website featuring a live release timer, worldwide release times, country-specific information, and platform guides.
 
 ## Features
 
 - Live GTA VI countdown timer
 - Worldwide release time tracker
-- Country selection
-- Search countries
-- Xbox platform guide
-- PlayStation platform guide
+- Country selection and country search
+- Xbox and PlayStation platform guides
 - Region-specific release information
 - Responsive mobile-friendly design
 - Dark interface with pink accents
 - Saves platform preferences locally
-
-## Preview
-
-**Website:** Coming soon!
 
 ## Technologies
 
@@ -38,32 +32,36 @@ vice-countdown/
 
 ## Run Locally
 
-1. Download or clone this repository.
+1. Clone or download this repository.
 2. Open `index.html` in your browser.
-3. The website will run without a build process.
+3. No installation or build process is required.
 
-## Free Website Hosting
+## Live Website
 
-This project can be hosted for free using Netlify or GitHub Pages.
+Once GitHub Pages is enabled, the website will be available at:
 
-### Netlify
-1. Create a free Netlify account.
-2. Upload the project folder.
-3. Deploy your website.
-4. Share your public website URL.
+https://WebsiteMakerBored.github.io/Vice-Countdown/
 
-### GitHub Pages
-1. Upload the project to a public GitHub repository.
-2. Rename the main HTML file to `index.html`.
-3. Open Settings → Pages.
-4. Select the `main` branch and root folder.
-5. Save and wait for deployment.
+## Deploy with GitHub Pages
 
-## Credits
+1. Open this repository's **Settings**.
+2. Select **Pages** in the sidebar.
+3. Under **Build and deployment**, choose **Deploy from a branch**.
+4. Select the `main` branch and the `/(root)` folder.
+5. Click **Save**.
+6. Wait for GitHub Pages to finish deploying.
 
-Vice Countdown is an independent fan-made GTA VI countdown project.
+The homepage must be named `index.html` and placed in the repository root.
 
-Grand Theft Auto and Grand Theft Auto VI are trademarks of Rockstar Games. This project is not affiliated with or endorsed by Rockstar Games.
+## Updating the Website
+
+Edit `index.html` and commit the changes to the `main` branch. GitHub Pages will publish the updated site automatically.
+
+## Credits & Disclaimer
+
+Vice Countdown is an independent fan-made project and is not affiliated with, endorsed by, or associated with Rockstar Games.
+
+Grand Theft Auto and Grand Theft Auto VI are trademarks of their respective owners.
 
 ---
 
