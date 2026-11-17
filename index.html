@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>GTA VI Countdown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#111111;--bg-2:#191919;--card:#202020;
+  --pink:#F58AB8;--pink-2:#F7B5D0;
+  --text:#F5F5F5;--text-2:#999999;--line:#303030;
+  --s1:8px;--s2:16px;--s3:24px;--s4:32px;--s6:48px;
+  --r-sm:12px;--r:20px;--r-lg:28px;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:dark;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 15px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+button{font:inherit;color:inherit}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 var(--s3)}
+nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:700;font-size:18px;letter-spacing:-.01em}
+.logo span{color:var(--pink)}
+
+.nav-r{display:flex;align-items:center;gap:var(--s1)}
+.visits{display:none;align-items:center;gap:var(--s1);height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg-2);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text);transition:border-color .2s}
+.visits:hover{border-color:#464646}
+.visits.show{display:inline-flex}
+.visits .dot{width:6px;height:6px;border-radius:50%;background:var(--pink);animation:beat 2s ease-in-out infinite}
+.visits em{font-style:normal;font-variant-numeric:tabular-nums}
+.visits.wait em{color:var(--text-2)}
+@keyframes beat{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* Platform selector */
+.plat{position:relative}
+.pbtn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 10px 0 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg-2);color:var(--text);font:500 13px/1 var(--font);cursor:pointer;transition:border-color .2s,background-color .2s,transform .15s}
+.pbtn:hover{border-color:#464646}
+.pbtn:active{transform:scale(.97)}
+.pbtn[aria-expanded="true"]{border-color:var(--pink)}
+.pbtn svg{width:16px;height:16px}
+.pbtn.has .pad{color:var(--pink)}
+.pbtn .chev{color:var(--text-2);transition:transform .2s var(--ease)}
+.pbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.menu{position:absolute;right:0;top:calc(100% + 8px);width:200px;padding:6px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.5);opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98);transform-origin:top right;transition:opacity .18s var(--ease),transform .18s var(--ease),visibility 0s .18s;z-index:20}
+.menu.open{opacity:1;visibility:visible;transform:none;transition:opacity .18s var(--ease),transform .18s var(--ease),visibility 0s}
+.opt{display:flex;align-items:center;justify-content:space-between;width:100%;height:44px;padding:0 12px;border:0;border-radius:12px;background:transparent;color:var(--text);font:500 14px/1 var(--font);text-align:left;cursor:pointer;transition:background-color .15s,color .15s}
+.opt+.opt{margin-top:2px}
+.opt:hover{background:rgba(255,255,255,.05)}
+.opt:focus-visible{outline-offset:-2px}
+.opt svg{opacity:0;transition:opacity .15s}
+.opt[aria-checked="true"]{background:rgba(245,138,184,.12);color:var(--pink-2)}
+.opt[aria-checked="true"] svg{opacity:1}
+
+.guide{display:none;margin-top:var(--s1);background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--s2)}
+.guide.show{display:block;animation:rise .35s var(--ease) both}
+.g-head{display:flex;align-items:center;gap:var(--s1)}
+.g-title{font-weight:600;font-size:16px;margin-right:auto}
+.chip{height:24px;padding:0 10px;display:inline-flex;align-items:center;border-radius:999px;background:rgba(245,138,184,.12);color:var(--pink-2);font-size:12px;font-weight:600}
+.guide .ibtn{width:32px;height:32px;border:0}
+.g-times{display:grid;grid-template-columns:1fr 1fr;gap:var(--s1);margin:12px 0}
+.g-time{background:var(--bg-2);border-radius:var(--r-sm);padding:12px}
+.g-time small{display:block;font-size:12px;color:var(--text-2)}
+.g-time b{display:block;margin-top:2px;font-size:14px;font-weight:500}
+.g-time span{display:block;margin-top:2px;font-size:12px;color:var(--text-2)}
+.g-lead{margin:0 0 12px;font-size:14px}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+.steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;font-size:14px}
+.steps li::before{content:counter(s);flex:none;width:22px;height:22px;margin-top:-1px;border-radius:50%;background:rgba(245,138,184,.12);color:var(--pink-2);font-size:12px;font-weight:600;display:grid;place-items:center}
+.g-note{margin:12px 0 0;font-size:13px;color:var(--text-2)}
+@media(max-width:480px){.g-times{grid-template-columns:1fr}.pbtn .lbl{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+.rise{animation:rise .6s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Hero */
+.hero{margin-top:var(--s2);background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s2);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.select{position:relative;display:flex;align-items:center}
+.select select{width:100%;appearance:none;-webkit-appearance:none;height:44px;padding:0 44px 0 var(--s2);font:500 15px/1 var(--font);color:var(--text);background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-sm);cursor:pointer;transition:border-color .2s,background-color .2s}
+.select select:hover{border-color:#464646}
+.select select:focus-visible{outline-offset:2px}
+.select svg{position:absolute;right:16px;color:var(--text-2);pointer-events:none}
+.clock{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s1);margin:var(--s3) 0 var(--s1);text-align:center}
+.unit b{display:block;font-weight:600;font-size:clamp(36px,10vw,52px);line-height:1.05;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.unit span{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--text-2)}
+.unit.s b{color:var(--pink)}
+.live{display:none;text-align:center;padding:var(--s4) 0 var(--s2)}
+.live strong{font-size:32px;font-weight:700;letter-spacing:-.02em;color:var(--pink)}
+
+/* List */
+.head{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);margin:var(--s4) 0 var(--s1)}
+h2{margin:0;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.ibtn{width:40px;height:40px;display:grid;place-items:center;background:transparent;border:1px solid var(--line);border-radius:50%;color:var(--text-2);cursor:pointer;transition:color .2s,border-color .2s,background-color .2s,transform .15s}
+.ibtn:hover:not(:disabled){color:var(--text);border-color:#464646;background:var(--bg-2)}
+.ibtn:active:not(:disabled){transform:scale(.94)}
+.ibtn:disabled{opacity:.35;cursor:not-allowed}
+.search{position:relative;display:flex;align-items:center;margin-bottom:var(--s1)}
+.search>svg{position:absolute;left:16px;color:var(--text-2);pointer-events:none}
+.search input{width:100%;height:44px;padding:0 48px 0 44px;font:400 15px/1 var(--font);color:var(--text);background:var(--bg-2);border:1px solid var(--line);border-radius:999px;transition:border-color .2s}
+.search input::placeholder{color:var(--text-2)}
+.search input:hover{border-color:#464646}
+.search input::-webkit-search-cancel-button{display:none}
+.search .ibtn{position:absolute;right:6px;width:36px;height:36px;border:0}
+
+.list{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{display:flex;align-items:center;gap:var(--s2);padding:12px var(--s2);border-top:1px solid var(--line);transition:background-color .2s;animation:rise .5s var(--ease) both}
+.row:first-child{border-top:0}
+.row:hover{background:rgba(255,255,255,.03)}
+.row.sel{background:rgba(245,138,184,.08)}
+.main{flex:1;min-width:0}
+.name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:13px;color:var(--text-2);margin-top:2px}
+.end{text-align:right;flex:none}
+.cd{font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.row.on .cd{color:var(--pink)}
+.mine{font-size:13px;color:var(--text-2);margin-top:2px}
+
+.skel{height:64px;display:flex;align-items:center;gap:var(--s2);padding:0 var(--s2);border-top:1px solid var(--line)}
+.skel:first-child{border-top:0}
+.skel i{display:block;height:12px;border-radius:6px;background:var(--bg-2);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.empty{display:none;flex-direction:column;align-items:center;gap:var(--s1);padding:var(--s6) var(--s3);text-align:center;color:var(--text-2)}
+.empty svg{width:28px;height:28px;color:var(--pink-2)}
+.empty strong{color:var(--text);font-weight:500}
+.btn{height:44px;padding:0 var(--s3);margin-top:var(--s1);background:var(--pink);color:#111;border:0;border-radius:999px;font-weight:600;cursor:pointer;transition:background-color .2s,transform .15s}
+.btn:hover{background:var(--pink-2)}
+.btn:active{transform:scale(.97)}
+
+/* Modal */
+dialog{width:min(92vw,400px);padding:var(--s3);background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 24px 64px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog[open]{animation:pop .25s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+dialog h3{margin:0 0 var(--s1);font-size:18px;font-weight:600}
+dialog p{margin:0 0 var(--s3);color:var(--text-2)}
+dialog .btn{margin:0;width:100%}
+.bottom{height:var(--s4)}
+
+@media(max-width:480px){
+  .wrap{padding:0 var(--s2)}
+  .hero{border-radius:var(--r)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pad" viewBox="0 0 24 24"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+</svg>
+
+<div class="wrap rise">
+  <nav>
+    <div class="logo">GTA <span>VI</span></div>
+    <div class="nav-r">
+      <div class="visits wait" id="visits" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><em id="vn">–</em><span>Visits</span></div>
+      <div class="plat" id="plat">
+        <button class="pbtn" id="pbtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="pmenu"><svg class="i pad" aria-hidden="true"><use href="#pad"/></svg><span class="lbl" id="plbl">Platform</span><svg class="i chev" aria-hidden="true"><use href="#chev"/></svg></button>
+        <div class="menu" id="pmenu" role="menu" aria-label="Platform">
+          <button class="opt" type="button" role="menuitemradio" aria-checked="false" data-p="xbox">Xbox<svg class="i" aria-hidden="true"><use href="#check"/></svg></button>
+          <button class="opt" type="button" role="menuitemradio" aria-checked="false" data-p="ps">PlayStation<svg class="i" aria-hidden="true"><use href="#check"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" aria-label="Countdown">
+      <div class="select">
+        <label class="sr" for="region">Region</label>
+        <select id="region"></select>
+        <svg class="i" aria-hidden="true"><use href="#chev"/></svg>
+      </div>
+      <div id="clock" class="clock" role="timer" aria-live="off">
+        <div class="unit"><b id="d">–</b><span>Days</span></div>
+        <div class="unit"><b id="h">––</b><span>Hours</span></div>
+        <div class="unit"><b id="m">––</b><span>Minutes</span></div>
+        <div class="unit s"><b id="s">––</b><span>Seconds</span></div>
+      </div>
+      <div id="live" class="live"><strong>Available now</strong></div>
+    </section>
+
+    <section class="guide" id="guide" aria-live="polite"></section>
+
+    <div class="head">
+      <h2>Release times</h2>
+      <button class="ibtn" id="info" type="button" aria-label="About these times"><svg class="i" aria-hidden="true"><use href="#info"/></svg></button>
+    </div>
+
+    <div class="search">
+      <svg class="i" aria-hidden="true"><use href="#search"/></svg>
+      <label class="sr" for="q">Search countries</label>
+      <input id="q" type="search" placeholder="Search countries" autocomplete="off">
+      <button class="ibtn" id="clear" type="button" aria-label="Clear search" disabled><svg class="i" aria-hidden="true"><use href="#x"/></svg></button>
+    </div>
+
+    <div class="list" id="listbox">
+      <div id="skeleton" aria-hidden="true"></div>
+      <div id="list" style="display:none"></div>
+      <div class="empty" id="empty">
+        <svg class="i" aria-hidden="true"><use href="#search"/></svg>
+        <strong id="empty-t">No results</strong>
+        <button class="btn" id="empty-clear" type="button">Clear search</button>
+      </div>
+    </div>
+  </main>
+  <div class="bottom"></div>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlg-t">
+  <h3 id="dlg-t">Release times</h3>
+  <p>GTA VI unlocks at midnight local time in each region. Times come from PlayStation Store listings and aren’t confirmed by Rockstar, so they may change.</p>
+  <button class="btn" id="dlg-close" type="button">Got it</button>
+</dialog>
+
+<script>
+(function(){
+  var BASE=Date.UTC(2026,10,19,0,0,0);
+  var R=[
+    ["New Zealand",13,"12:00 AM NZDT"],
+    ["Australia",11,"12:00 AM AEDT"],
+    ["Japan",9,"12:00 AM JST"],
+    ["South Korea",9,"12:00 AM KST"],
+    ["Philippines",8,"12:00 AM PHT"],
+    ["Singapore",8,"12:00 AM SGT"],
+    ["India",5.5,"12:00 AM IST"],
+    ["United Arab Emirates",4,"12:00 AM GST"],
+    ["Saudi Arabia",3,"12:00 AM AST"],
+    ["Türkiye",3,"12:00 AM TRT"],
+    ["South Africa",2,"12:00 AM SAST"],
+    ["Germany",1,"12:00 AM CET"],
+    ["France",1,"12:00 AM CET"],
+    ["Italy",1,"12:00 AM CET"],
+    ["Spain",1,"12:00 AM CET"],
+    ["Netherlands",1,"12:00 AM CET"],
+    ["Poland",1,"12:00 AM CET"],
+    ["Sweden",1,"12:00 AM CET"],
+    ["United Kingdom",0,"12:00 AM GMT"],
+    ["Ireland",0,"12:00 AM GMT"],
+    ["Portugal",0,"12:00 AM WET"],
+    ["Brazil",-3,"12:00 AM BRT"],
+    ["Argentina",-3,"12:00 AM ART"],
+    ["Chile",-3,"12:00 AM CLST"],
+    ["United States",-5,"12:00 AM ET · 9:00 PM PT, Nov 18"],
+    ["Canada",-5,"12:00 AM ET"],
+    ["Colombia",-5,"12:00 AM COT"],
+    ["Mexico",-6,"12:00 AM CST"]
+  ];
+  R.forEach(function(r){r.t=BASE-r[1]*3600000;});
+  R.sort(function(a,b){return a.t-b.t;});
+
+  var $=function(i){return document.getElementById(i)};
+  var tz;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}
+  function fmtMine(t){
+    try{return new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(new Date(t));}
+    catch(e){return new Date(t).toString();}
+  }
+  function pad(n){return n<10?"0"+n:""+n}
+  function parts(ms){var s=Math.floor(ms/1000);return{d:Math.floor(s/86400),h:Math.floor(s%86400/3600),m:Math.floor(s%3600/60),s:s%60}}
+  function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+
+  var sk=$("skeleton");
+  for(var k=0;k<6;k++){
+    var s=el("div","skel");
+    var a=el("i");a.style.width="40%";
+    var sp=el("div");sp.style.flex="1";sp.appendChild(a);
+    var b=el("i");b.style.width="72px";
+    s.appendChild(sp);s.appendChild(b);sk.appendChild(s);
+  }
+
+  var sel=$("region"),list=$("list"),rows=[];
+  R.forEach(function(r,i){
+    var o=el("option",null,r[0]);o.value=i;sel.appendChild(o);
+    var row=el("div","row");row.style.animationDelay=Math.min(i*20,300)+"ms";
+    var main=el("div","main");
+    main.appendChild(el("div","name",r[0]));
+    main.appendChild(el("div","sub",r[2]));
+    var end=el("div","end");
+    var cd=el("div","cd");
+    end.appendChild(cd);
+    end.appendChild(el("div","mine",fmtMine(r.t)));
+    row.appendChild(main);row.appendChild(end);
+    list.appendChild(row);
+    rows.push({el:row,cd:cd,name:r[0].toLowerCase()});
+  });
+
+  var off=-new Date(BASE).getTimezoneOffset()/60,pick=-1;
+  if(tz&&tz.indexOf("America/")===0&&off<=-5&&off>=-8){pick=R.findIndex(function(r){return r[0]==="United States"});}
+  if(pick<0){pick=R.findIndex(function(r){return r[1]===off});}
+  if(pick<0){pick=R.findIndex(function(r){return r[0]==="United States"});}
+  sel.value=pick;
+
+  function setWhen(){
+    rows.forEach(function(x,i){x.el.classList.toggle("sel",i===+sel.value)});
+  }
+  sel.addEventListener("change",function(){setWhen();tick();if(typeof renderGuide==="function")renderGuide();});
+
+  function tick(){
+    var now=Date.now(),r=R[sel.value],diff=r.t-now;
+    if(diff<=0){$("clock").style.display="none";$("live").style.display="block";}
+    else{
+      $("clock").style.display="";$("live").style.display="none";
+      var p=parts(diff);
+      $("d").textContent=p.d;$("h").textContent=pad(p.h);$("m").textContent=pad(p.m);$("s").textContent=pad(p.s);
+    }
+    R.forEach(function(r,i){
+      var df=r.t-now,x=rows[i];
+      if(df<=0){x.el.classList.add("on");x.cd.textContent="Live now";}
+      else{
+        x.el.classList.remove("on");
+        var p=parts(df);
+        x.cd.textContent=(p.d>0?p.d+"d ":"")+pad(p.h)+":"+pad(p.m)+":"+pad(p.s);
+      }
+    });
+  }
+
+  var q=$("q"),clear=$("clear");
+  function filter(){
+    var v=q.value.trim().toLowerCase(),n=0;
+    rows.forEach(function(x){var show=!v||x.name.indexOf(v)>-1;x.el.style.display=show?"":"none";if(show)n++;});
+    clear.disabled=!q.value;
+    $("empty").style.display=n===0?"flex":"none";
+    if(n===0)$("empty-t").textContent="No results for “"+q.value.trim()+"”";
+  }
+  function reset(){q.value="";filter();q.focus();}
+  q.addEventListener("input",filter);
+  clear.addEventListener("click",reset);
+  $("empty-clear").addEventListener("click",reset);
+  q.addEventListener("keydown",function(e){if(e.key==="Escape"&&q.value)reset();});
+
+  var dlg=$("dlg");
+  $("info").addEventListener("click",function(){if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","");});
+  $("dlg-close").addEventListener("click",function(){dlg.close();});
+  dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.close();});
+
+  // Platform selector
+  var NZ=R.filter(function(r){return r[0]==="New Zealand"})[0];
+  var P={
+    xbox:{name:"Xbox",
+      steps:["Buy and pre-load GTA VI on your own account.","Open Settings › System › Language & location.","Set Location to New Zealand, then restart your console.","Launch the game at New Zealand midnight. You can switch your location back once the game is available in your own region."],
+      note:"Works only if Xbox follows the regional release schedule, and neither Rockstar nor Microsoft has confirmed it. Your store may switch to New Zealand while the setting is changed."},
+    ps:{name:"PlayStation",
+      lead:"Your unlock follows your PSN account’s store region, which can’t be changed on an existing account. Waiting for your own region needs no extra purchase. Playing earlier means a separate purchase on a New Zealand account.",
+      steps:["Create a separate New Zealand PSN account.","Buy GTA VI on it with New Zealand payment, such as a regional gift card.","On your console, turn on Console Sharing and Offline Play.","Launch the game at New Zealand midnight."],
+      note:"Your existing copy won’t unlock early, and changing your console’s clock does nothing. Check Sony’s terms before creating a regional account."}
+  };
+  var KEY="gta6-platform",plat=null;
+  try{plat=localStorage.getItem(KEY)}catch(e){}
+  if(!P[plat])plat=null;
+  var pbtn=$("pbtn"),pmenu=$("pmenu"),opts=[].slice.call(pmenu.querySelectorAll(".opt")),guide=$("guide");
+  function fmtNZ(t){
+    try{return new Intl.DateTimeFormat("en-US",{timeZone:"Pacific/Auckland",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(new Date(t));}
+    catch(e){return NZ[2]+" · Nov 19";}
+  }
+  function box(label,val,sub){
+    var b=el("div","g-time");b.appendChild(el("small",null,label));b.appendChild(el("b",null,val));b.appendChild(el("span",null,sub));return b;
+  }
+  function renderGuide(){
+    guide.textContent="";
+    pbtn.classList.toggle("has",!!plat);
+    $("plbl").textContent=plat?P[plat].name:"Platform";
+    opts.forEach(function(o){o.setAttribute("aria-checked",o.getAttribute("data-p")===plat?"true":"false")});
+    if(!plat){guide.classList.remove("show");return;}
+    var d=P[plat],r=R[sel.value],head=el("div","g-head");
+    head.appendChild(el("div","g-title",d.name));
+    var hrs=Math.round((r.t-NZ.t)/3600000);
+    if(hrs>0)head.appendChild(el("span","chip",hrs+"h earlier than "+r[0]));
+    var x=el("button","ibtn");x.type="button";x.setAttribute("aria-label","Close guide");
+    x.innerHTML='<svg class="i" aria-hidden="true"><use href="#x"/></svg>';
+    x.addEventListener("click",function(){choose(null);});
+    head.appendChild(x);guide.appendChild(head);
+    var t=el("div","g-times");
+    t.appendChild(box("Earliest · New Zealand",fmtNZ(NZ.t),"Your time: "+fmtMine(NZ.t)));
+    t.appendChild(box(r[0],r[2],"Your time: "+fmtMine(r.t)));
+    guide.appendChild(t);
+    if(d.lead)guide.appendChild(el("p","g-lead",d.lead));
+    var ol=el("ol","steps");d.steps.forEach(function(st){ol.appendChild(el("li",null,st))});
+    guide.appendChild(ol);guide.appendChild(el("p","g-note",d.note));
+    guide.classList.remove("show");void guide.offsetWidth;guide.classList.add("show");
+  }
+  function choose(k){
+    plat=k;
+    try{if(k)localStorage.setItem(KEY,k);else localStorage.removeItem(KEY);}catch(e){}
+    renderGuide();
+  }
+  function openMenu(focus){
+    pmenu.classList.add("open");pbtn.setAttribute("aria-expanded","true");
+    if(focus){var t=opts.filter(function(o){return o.getAttribute("aria-checked")==="true"})[0]||opts[0];t.focus();}
+  }
+  function closeMenu(back){
+    pmenu.classList.remove("open");pbtn.setAttribute("aria-expanded","false");
+    if(back)pbtn.focus();
+  }
+  pbtn.addEventListener("click",function(){pmenu.classList.contains("open")?closeMenu():openMenu(false);});
+  pbtn.addEventListener("keydown",function(e){if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();openMenu(true);}});
+  opts.forEach(function(o,i){
+    o.addEventListener("click",function(){choose(o.getAttribute("data-p"));closeMenu(true);});
+    o.addEventListener("keydown",function(e){
+      if(e.key==="ArrowDown"){e.preventDefault();opts[(i+1)%opts.length].focus();}
+      else if(e.key==="ArrowUp"){e.preventDefault();opts[(i+opts.length-1)%opts.length].focus();}
+    });
+  });
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&pmenu.classList.contains("open"))closeMenu(true);});
+  document.addEventListener("pointerdown",function(e){if(pmenu.classList.contains("open")&&!$("plat").contains(e.target))closeMenu();});
+  $("plat").addEventListener("focusout",function(e){if(pmenu.classList.contains("open")&&e.relatedTarget&&!$("plat").contains(e.relatedTarget))closeMenu();});
+  renderGuide();
+
+  // Visitor counter, backed by GoatCounter (real analytics, stored by their servers).
+  // Set GC_CODE to your GoatCounter site code, e.g. "gta6countdown" for gta6countdown.goatcounter.com
+  var GC_CODE="";
+  if(GC_CODE){
+    var vEl=$("visits"),vn=$("vn");
+    vEl.classList.add("show");
+    var sc=document.createElement("script");
+    sc.async=true;sc.src="https://gc.zgo.at/count.js";
+    sc.setAttribute("data-goatcounter","https://"+GC_CODE+".goatcounter.com/count");
+    document.head.appendChild(sc);
+    setTimeout(function(){
+      fetch("https://"+GC_CODE+".goatcounter.com/counter/TOTAL.json")
+        .then(function(r){if(!r.ok)throw 0;return r.json();})
+        .then(function(d){
+          var n=parseInt(String(d.count_unique).replace(/\D/g,""),10);
+          if(isNaN(n))throw 0;
+          vn.textContent=n.toLocaleString();vEl.classList.remove("wait");
+        })
+        .catch(function(){vEl.title="Visit count unavailable right now";});
+    },1500);
+  }
+
+  setWhen();tick();filter();setInterval(tick,1000);
+  setTimeout(function(){sk.style.display="none";list.style.display="";},450);
+})();
+</script>
+</body>
+</html>
